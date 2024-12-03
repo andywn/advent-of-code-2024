@@ -32,7 +32,7 @@ class Report(report: String) {
     fun getResult(allowOneError: Boolean, skipIndex: Int): ReportResult {
 
         var rl = IntRange(0, reportList.size-1)
-            .filter{ it -> it != skipIndex }
+            .filter{ it -> allowOneError && it != skipIndex }
             .map { reportList.get(it) }
             .toList()
 
@@ -62,7 +62,7 @@ class Report(report: String) {
             (values.containsKey(ReportResult.DECREASING) &&
                     values.get(ReportResult.DECREASING)!! >= allResults)
                 -> ReportResult.DECREASING
-
+            // recursive call back to check with missing index.
             (allowOneError && skipIndex < reportList.size-1) ->  getResult(allowOneError, skipIndex+1)
 
             else -> ReportResult.UNSAFE
