@@ -3,18 +3,40 @@ package uk.andrewnorman
 import java.io.File
 import kotlin.streams.asStream
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
 
-    val regex = Regex("mul\\((\\d{1,3}),(\\d{1,3})\\)")
+    val regex = Regex("(mul\\((\\d{1,3}),(\\d{1,3})\\))|(do\\(\\))|(don't\\(\\))")
     val lines = File("src/main/resources/input.txt")?.bufferedReader()?.readLines()
-    //val lines = listOf("mul(1,2)mul(3,4)mu[4,5]")
 
-    val sum = lines!!.stream()
+    val instructions = lines!!.stream()
         .flatMap{ line -> regex.findAll(line).asStream() }
-        .map { matchResult -> matchResult.groupValues[1].toString().toInt() * matchResult.groupValues[2].toString().toInt()}
-        .toList().sum()
+        .map { matchResult ->
+            when {
+                matchResult.value.contains("mul") ->
+                    InstructionAndValue(
+                        Instruction.MUL,
+                        matchResult.groupValues[2].toString().toInt() * matchResult.groupValues[3].toString().toInt()
+                    )
+                matchResult.value.contains("don't") ->
+                    InstructionAndValue(Instruction.DONT, 0)
+                else -> InstructionAndValue(Instruction.DO, 0)
+            }
+        }
+        .toList()
 
-    println(sum)
+    val pair = instructions.fold(Pair(Instruction.DO, 0)) { pair, instr ->
+        when(instr.instruction) {
+            (Instruction.DO) -> Pair(Instruction.DO, pair.second)
+            (Instruction.DONT) -> Pair(Instruction.DONT, pair.second)
+            else -> if (pair.first == Instruction.DO) { Pair(Instruction.DO, pair.second + instr.value) } else { pair }
+        }
+    }
+
+    println(pair.second)
 }
+
+enum class Instruction {
+    MUL, DO, DONT
+}
+
+data class InstructionAndValue(val instruction: Instruction, val value: Int)
