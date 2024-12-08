@@ -1,31 +1,47 @@
 package uk.andrewnorman
 
 
-class Guard(val area: GuardedArea, val map: List<String>) {
+class Guard {
 
     var guardLocation: GuardLocation
 
+    var area: GuardedArea
+
     val positionsVisited: HashSet<String> = HashSet()
 
-    init {
+    val obstructionOptions: HashSet<String> = HashSet()
+
+    constructor(guardedArea: GuardedArea, map: List<String>) {
         val coords = IntRange(0, map.size-1).map{
             Pair(map[it].toString().indexOfAny("^<>v".toCharArray()), it)
         }.filter { it.first >= 0 }.get(0)
         val direction = Direction.findDirection(map[coords.second][coords.first])
 
         this.guardLocation = GuardLocation(coords.first, coords.second, direction, false)
-        addToSet(guardLocation)
+        this.area = guardedArea
+        positionsVisited.add("${guardLocation.x}:${guardLocation.y}")
     }
 
-    fun move(): GuardLocation {
+    constructor(guard: GuardLocation, guardedArea: GuardedArea) {
+        this.guardLocation = guard
+        this.area = guardedArea
+    }
+
+    fun move(checkObstructionLoops: Boolean = true): GuardLocation {
         var direction:Direction = guardLocation.direction
         for(i:Int in 1..4) {
             val nextSpot = direction.move(Pair(guardLocation.x, guardLocation.y))
-            val nextspotResult = area.checkLocation(nextSpot)
+            val nextspotResult = area.checkLocation(nextSpot, direction, checkObstructionLoops)
             when (nextspotResult) {
                 (LocationCheck.OK) -> {
                     this.guardLocation = GuardLocation(nextSpot.first, nextSpot.second, direction, false)
-                    addToSet(guardLocation)
+                    positionsVisited.add("${guardLocation.x}:${guardLocation.y}")
+                    return guardLocation
+                }
+                (LocationCheck.OBSTRUCTION_OPTION) -> {
+                    this.guardLocation = GuardLocation(nextSpot.first, nextSpot.second, direction, false)
+                    positionsVisited.add("${guardLocation.x}:${guardLocation.y}")
+                    obstructionOptions.add("${guardLocation.x}:${guardLocation.y}")
                     return guardLocation
                 }
                 (LocationCheck.OUTSIDE_MAP) -> {
@@ -39,14 +55,12 @@ class Guard(val area: GuardedArea, val map: List<String>) {
         return guardLocation
     }
 
-    fun addToSet(guardLocation: GuardLocation) {
-        val x = guardLocation.x
-        val y = guardLocation.y
-        positionsVisited.add("$x:$y")
-    }
-
     fun getCount():Int {
         return positionsVisited.size
+    }
+
+    fun getObstructions():Int {
+        return obstructionOptions.size
     }
 }
 
@@ -64,6 +78,15 @@ enum class Direction(val character: Char, val move: (coords: Pair<Int, Int>) -> 
             (RIGHT) -> DOWN
             (DOWN) -> LEFT
             else -> UP
+        }
+    }
+
+    fun turnLeft(): Direction {
+        return when(this) {
+            (UP) -> LEFT
+            (RIGHT) -> UP
+            (DOWN) -> RIGHT
+            else -> DOWN
         }
     }
 

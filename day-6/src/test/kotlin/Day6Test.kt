@@ -36,4 +36,27 @@ class Day6Test {
         assertEquals(41, guard.getCount())
     }
 
+    @Test
+    fun testChallenge2() {
+        val lines = listOf(
+            "....#.....",
+            ".........#",
+            "..........",
+            "..#.......",
+            ".......#..",
+            "..........",
+            ".#..^.....",
+            "........#.",
+            "#.........",
+            "......#..."
+        )
+        val area = GuardedArea(lines)
+        val guard = Guard(area, lines)
+
+        while (!guard.move().outsideOfMap) {
+        }
+        assertEquals(41, guard.getCount())
+        assertEquals(6, guard.getObstructions())
+    }
+
 }
