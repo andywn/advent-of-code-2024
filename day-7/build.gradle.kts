@@ -11,6 +11,8 @@ repositories {
 }
 
 dependencies {
+    //runtimeOnly("org.jetbrains.kotlin:kotlin-scripting-jsr223")
+    // coroutines dependency is required for this particular definition
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     testImplementation(kotlin("test"))
 }
