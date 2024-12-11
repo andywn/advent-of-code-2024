@@ -1,14 +1,32 @@
 package uk.andrewnorman
 
 import java.io.File
+import kotlin.math.abs
+import kotlin.math.min
 
 fun main() {
 
     val lines = File("src/main/resources/input.txt").bufferedReader().readLines()
 
+//    val lines = listOf(
+//        "............",
+//        "........0...",
+//        ".....0......",
+//        ".......0....",
+//        "....0.......",
+//        "......A.....",
+//        "............",
+//        "............",
+//        "........A...",
+//        ".........A..",
+//        "............",
+//        "............"
+//    )
+
     val antennaMap = AntennaMap(lines)
 
     println(antennaMap.countAntinodes())
+    println(antennaMap.antinodes)
 
 }
 
@@ -50,11 +68,25 @@ class AntennaMap {
     }
 
     fun antinodeExists(a1: Pair<Int, Int>, a2: Pair<Int, Int>) {
-        val x = a1.first + a1.first - a2.first
-        val y = a1.second + a1.second - a2.second
 
-        if (x >= 0 && x <= maxX && y >= 0 && y <= maxY) {
+        var gcd = 1
+        var xdif = a1.first - a2.first
+        var ydif = a1.second - a2.second
+        for (i in 1..min(abs(xdif),abs(ydif))) {
+            if (abs(xdif) % i == 0 && abs(ydif) % i == 0) {
+                gcd = i
+            }
+        }
+        xdif = xdif / gcd
+        ydif = ydif / gcd
+
+        var x = a1.first
+        var y = a1.second
+
+        while (x >= 0 && x <= maxX && y >= 0 && y <= maxY) {
             antinodes.add("$x:$y")
+            x = x + xdif
+            y = y + ydif
         }
     }
 
