@@ -34,7 +34,7 @@ class XMasFinder(lines: List<String>){
         val counter = AtomicInteger()
         runBlocking {
             for (i in 0..board.size-1) {
-                launch {
+                coroutineScope {
                     val sum = IntRange(0, board.get(0).length-1).map { x -> Pair(x, i) }
                         .filter { coords -> getVal.invoke(coords) == word.get(1) }
                         .map { coords -> countFromA(coords) }
