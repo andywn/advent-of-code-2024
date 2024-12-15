@@ -2,6 +2,8 @@ package uk.andrewnorman
 
 import java.io.File
 
+import uk.andrewnorman.Direction.*
+
 fun main() {
     val lines = File("day-12/src/main/resources/input.txt").bufferedReader().readLines()
 
@@ -21,7 +23,7 @@ fun main() {
 
 class Garden(val lines: List<String>) {
 
-    val visitedCoords = mutableSetOf<Coords>()
+    val visitedCoords = mutableMapOf<Coords, Set<Direction>>()
 
     fun process(): Long {
         var price = 0L
@@ -29,6 +31,7 @@ class Garden(val lines: List<String>) {
             for (x in 0..lines[0].length-1) {
                 if (!visitedCoords.contains(Coords(x, y))) {
                     val fencing = visitPlant(Coords(x, y), lines[y][x])
+                    println("${lines[y][x]} gives result $fencing")
                     price += (fencing.perimeter * fencing.area)
                 }
             }
@@ -38,20 +41,39 @@ class Garden(val lines: List<String>) {
 
     fun visitPlant(coords: Coords, plant: Char): Fencing {
         if (visitedCoords.contains(coords)) {
-            return Fencing(0, 0)
+            return Fencing(0, 0, visitedCoords.get(coords)!!)
         }
-        visitedCoords.add(coords)
-        var perimeter = 4
+        val fenceSet = mutableSetOf<Direction>(UP, DOWN, LEFT, RIGHT)
+        for (dir in Direction.entries) {
+            if (checkPlant(dir.move(coords), plant)) {
+                fenceSet.remove(dir)
+            }
+        }
+        visitedCoords.put(coords, fenceSet)
+
+        var perimeter = 0
         var area = 1
+        var fenceMap = mutableMapOf<Direction, Set<Direction>>()
         for (dir in Direction.entries) {
             if (checkPlant(dir.move(coords), plant)) {
                 val fence = visitPlant(dir.move(coords), plant)
-                perimeter--
                 perimeter += fence.perimeter
                 area += fence.area
+                fenceMap.put(dir, fence.lastFenceSet)
             }
         }
-        return Fencing(area, perimeter)
+        // Calculate perimeters for this single coord. Only counting a fence if you're the first
+        // coord with that side.
+        for (dir in fenceSet) {
+            perimeter += when(dir) {
+                (UP) -> if (fenceMap.getOrDefault(LEFT, emptySet()).contains(UP)) { 0 } else { 1 }
+                (RIGHT) -> if (fenceMap.getOrDefault(UP, emptySet()).contains(RIGHT)) { 0 } else { 1 }
+                (DOWN) -> if (fenceMap.getOrDefault(RIGHT, emptySet()).contains(DOWN)) { 0 } else { 1 }
+                (LEFT) -> if (fenceMap.getOrDefault(DOWN, emptySet()).contains(LEFT)) { 0 } else { 1 }
+            }
+        }
+
+        return Fencing(area, perimeter, fenceSet)
     }
 
     // Does plant match character 'plant'?
@@ -64,7 +86,7 @@ class Garden(val lines: List<String>) {
 
 data class Coords(val x: Int, val y: Int)
 
-data class Fencing(val area: Int, val perimeter: Int)
+data class Fencing(val area: Int, val perimeter: Int, val lastFenceSet: Set<Direction>)
 
 enum class Direction(val move: (coords: Coords) -> Coords) {
     UP({ coords: Coords -> Coords(coords.x, coords.y-1) }),
