@@ -6,7 +6,7 @@ import kotlin.streams.asStream
 fun main() {
 
     val regex = Regex("(mul\\((\\d{1,3}),(\\d{1,3})\\))|(do\\(\\))|(don't\\(\\))")
-    val lines = File("src/main/resources/input.txt")?.bufferedReader()?.readLines()
+    val lines = File("day-3/src/main/resources/input.txt")?.bufferedReader()?.readLines()
 
     val instructions = lines!!.stream()
         .flatMap{ line -> regex.findAll(line).asStream() }

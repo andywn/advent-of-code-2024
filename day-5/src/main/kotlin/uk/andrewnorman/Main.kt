@@ -3,7 +3,7 @@ package uk.andrewnorman
 import java.io.File
 
 fun main() {
-    val lines = File("src/main/resources/input.txt")!!.bufferedReader()!!.readLines()
+    val lines = File("day-5/src/main/resources/input.txt")!!.bufferedReader()!!.readLines()
     val rules = Rules(lines)
     val regex = Regex("^(\\d+,)+(\\d+)")
     println(lines.stream()

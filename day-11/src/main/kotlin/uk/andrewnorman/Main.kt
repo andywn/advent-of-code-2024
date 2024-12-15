@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 
 fun main() {
-    val lines = File("src/main/resources/input.txt").bufferedReader().readLines().get(0).split(" ")
+    val lines = File("day-11/src/main/resources/input.txt").bufferedReader().readLines().get(0).split(" ")
 
     //val lines = listOf("125 17").get(0).split(" ")
 

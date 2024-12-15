@@ -6,7 +6,7 @@ import java.io.File
 
 fun main() {
 
-    val lines = File("src/main/resources/input.txt").bufferedReader().readLines()
+    val lines = File("day-6/src/main/resources/input.txt").bufferedReader().readLines()
     val area = GuardedArea(lines)
     val guard = Guard(area, lines)
 

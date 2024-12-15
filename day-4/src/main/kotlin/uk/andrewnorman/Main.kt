@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicInteger
 
 fun main() {
-    val lines = File("src/main/resources/input.txt")!!.bufferedReader()!!.readLines()
+    val lines = File("day-4/src/main/resources/input.txt")!!.bufferedReader()!!.readLines()
     println(WordFinder(lines).startSearch())
     println(XMasFinder(lines).startSearch())
 }

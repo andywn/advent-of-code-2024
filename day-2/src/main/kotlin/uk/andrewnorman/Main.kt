@@ -5,7 +5,7 @@ import kotlin.math.abs
 
 fun main() {
 
-    val lines = File("src/main/resources/input.txt")?.bufferedReader()?.readLines()
+    val lines = File("day-2/src/main/resources/input.txt")?.bufferedReader()?.readLines()
 
     println(lines!!.stream()
         .filter { it -> Report(it).getResult(true, -1) != ReportResult.UNSAFE }

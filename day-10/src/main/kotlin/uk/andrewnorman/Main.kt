@@ -5,7 +5,7 @@ import java.io.File
 
 fun main() {
 
-    val lines = File("src/main/resources/input.txt").bufferedReader().readLines()
+    val lines = File("day-10/src/main/resources/input.txt").bufferedReader().readLines()
 
 //    val lines = listOf("89010123",
 //            "78121874",

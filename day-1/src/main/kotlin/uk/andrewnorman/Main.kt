@@ -22,7 +22,7 @@ class IdListPair() {
     val secondColumnValueCount: Map<Int, Int>
 
     init {
-        val lines = File("src/main/resources/input.txt")?.bufferedReader()?.readLines()
+        val lines = File("day-1/src/main/resources/input.txt")?.bufferedReader()?.readLines()
 
         firstColumn = lines!!.stream()
             .map{ it -> intPairParser.matchAt(it, 0)!!.groups[1]!!.value.toInt()}

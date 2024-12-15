@@ -4,7 +4,7 @@ import java.io.File
 
 
 fun main() {
-    val lines = File("src/main/resources/input.txt").bufferedReader().readLines()
+    val lines = File("day-7/src/main/resources/input.txt").bufferedReader().readLines()
 
     println(lines.parallelStream()
         .map{ line -> Equation(line) }

@@ -6,7 +6,7 @@ import kotlin.math.min
 
 fun main() {
 
-    val lines = File("src/main/resources/input.txt").bufferedReader().readLines()
+    val lines = File("day-8/src/main/resources/input.txt").bufferedReader().readLines()
 
 //    val lines = listOf(
 //        "............",
