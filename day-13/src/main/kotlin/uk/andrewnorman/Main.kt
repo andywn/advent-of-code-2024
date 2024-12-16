@@ -22,7 +22,7 @@ fun main() {
 //            "Prize: X=18641, Y=10279")
 
     var line = 0
-    var sumTokens = 0
+    var sumTokens = 0L
     while (line < lines.size) {
         sumTokens += ClawGame(lines[line], lines[line+1], lines[line+2]).winGame()
         line += 4
@@ -32,53 +32,66 @@ fun main() {
 
 class ClawGame(val buttonAStr: String, val buttonBStr: String, val prizeStr: String) {
 
-    fun winGame(): Int {
+    fun winGame(): Long {
         val buttonA = Button(buttonAStr)
         val buttonB = Button(buttonBStr)
         val prize = Prize(prizeStr)
-        var minCost = 0
 
-        // i == how many A's
-        aloop@for (i in 0..100) {
-            val diffX = prize.x - (i * buttonA.x)
-            val diffY = prize.y - (i * buttonA.y)
-            if (diffX < 0 || diffY < 0) {
-                break@aloop
-            }
-            if (diffX % buttonB.x == 0 && diffY % buttonB.y == 0 && (diffX / buttonB.x) == (diffY / buttonB.y)) {
-                // Cost
-                val cost = 3 * i + (diffY / buttonB.y)
-                if (minCost == 0 || minCost > cost) {
-                    minCost = cost
-                }
-            }
+        /**
+         * So we know:
+         * ax * a + bx * b = px
+         * ay * a + by * b = py
+         * We can solve these two equations.
+         * a = (px - bx*b)/ax
+         * b = (py - ay*a)/by
+         * b*by = py - ay* ((px-bx*b)/ax)
+         *      = py - (ay*px)/ax + (ay*bx*b)/ax
+         * b(ax*by - ay*bx) = ax*py - ay*px
+         * therefore...
+         * b = (ax*py - ay*px) / (ax*py - ay*bx)
+         * If we can solve for a and b, and both divide without a remainder, then we have the min solution.
+         */
+
+        //Algebra Solution.
+        val b_dividend = (buttonA.x*prize.y - buttonA.y*prize.x)
+        val b_divisor = (buttonA.x*buttonB.y - buttonA.y*buttonB.x)
+        if (b_dividend % b_divisor != 0L) {
+            return 0
         }
-        return minCost
+        val b = b_dividend/b_divisor
+        val a_dividend = (prize.x - (buttonB.x * b))
+        val a_divisor = buttonA.x
+        if (a_dividend % a_divisor != 0L) {
+            return 0
+        }
+        val a = a_dividend/a_divisor
+
+        return (a*3 + b)
     }
 
 }
 
 class Button {
-    val x: Int
-    val y: Int
+    val x: Long
+    val y: Long
     val buttonRegex = Regex("Button [A|B]: X\\+(\\d+), Y\\+(\\d+)")
 
     constructor(button: String) {
         var group = buttonRegex.find(button)!!.groups
-        x = group[1]!!.value.toInt()
-        y = group[2]!!.value.toInt()
+        x = group[1]!!.value.toLong()
+        y = group[2]!!.value.toLong()
     }
 }
 
 class Prize {
-    val x: Int
-    val y: Int
+    val x: Long
+    val y: Long
     val prizeRegex = Regex("Prize: X=(\\d+), Y=(\\d+)")
 
     constructor(button: String) {
         var group = prizeRegex.find(button)!!.groups
-        x = group[1]!!.value.toInt()
-        y = group[2]!!.value.toInt()
+        x = group[1]!!.value.toLong() + 10000000000000L
+        y = group[2]!!.value.toLong() + 10000000000000L
     }
 
 }
