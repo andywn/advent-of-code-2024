@@ -1,4 +1,5 @@
 rootProject.name = "advent-of-code-2024"
+include("common")
 include("day-1")
 include("day-2")
 include("day-3")
@@ -12,4 +13,4 @@ include("day-10")
 include("day-11")
 include("day-12")
 include("day-13")
-
+include("day-14")
