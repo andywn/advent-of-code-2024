@@ -50,5 +50,9 @@ class Coords(val x: Int, val y: Int) {
         return max(xquadrant+yquadrant, 0)
     }
 
+    override fun equals(other: Any?): Boolean {
+        return (other is Coords && other.x == this.x && other.y == this.y)
+    }
+
     override fun toString(): String = "<${this.x}, ${this.y}>"
 }
