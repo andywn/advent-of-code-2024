@@ -1,10 +1,9 @@
 plugins {
     kotlin("jvm") version "2.1.0"
-    application
 }
 
 group = "uk.andrewnorman"
-version = "1.0-SNAPSHOT"
+version = "unspecified"
 
 repositories {
     mavenCentral()
@@ -12,15 +11,8 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
-    testImplementation(kotlin("test"))
-}
-
-application {
-    mainClass = "uk.andrewnorman.MainKt"
-}
-
-tasks.run {
-
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {
