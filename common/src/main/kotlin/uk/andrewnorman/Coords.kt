@@ -1,5 +1,6 @@
 package uk.andrewnorman
 
+import java.util.Objects
 import kotlin.math.floor
 import kotlin.math.max
 
@@ -52,6 +53,10 @@ class Coords(val x: Int, val y: Int) {
 
     override fun equals(other: Any?): Boolean {
         return (other is Coords && other.x == this.x && other.y == this.y)
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(x, y)
     }
 
     override fun toString(): String = "<${this.x}, ${this.y}>"
