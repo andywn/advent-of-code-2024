@@ -56,6 +56,8 @@ class Computer {
                 }
                 val output = inst.instruction(operand, registers)?.toInt()
                 if (output?.equals(instructions.get(matchId)) == false) {
+                    // Output is always mod 8. Playing around, can see that roughly, we need to find the right
+                    // power of 8 that matches the offset on the instructions list.
                     i += Math.pow(8.0, 12.0).toLong()
                     continue@iloop
                 } else if (output?.equals(instructions.get(matchId)) == true) {
