@@ -13,7 +13,6 @@ fun main() {
 //            "Program: 0,1,5,4,3,0")
 
     println(Computer(lines).run())
-    println(Computer(lines).test(30000000000021))
 
     println("Found it! ${Computer(lines).challengeTwo()}")
 }
