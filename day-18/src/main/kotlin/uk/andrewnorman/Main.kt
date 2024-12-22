@@ -37,12 +37,26 @@ fun main() {
         .map {
             val groups = coords.find(it)!!.groups
             Coords(groups[1]!!.value.toInt(), groups[2]!!.value.toInt())
-        }.toSet()
+        }.toMutableSet()
 
 
     val result = RouteProblemMap(Coords(70, 70), obstacles, 71, 71, 1, 0).findShortestPath(Coords(0, 0), Direction.DOWN, false)
     //val result = RouteProblemMap(Coords(6, 6), obstacles, 7, 7, 1, 0).findShortestPath(Coords(0, 0), Direction.DOWN)
 
     println(result.shortestCost)
+
+    IntRange(1024, 3449)
+        .map { lines.get(it) }
+        .map {
+            val groups = coords.find(it)!!.groups
+            Coords(groups[1]!!.value.toInt(), groups[2]!!.value.toInt())
+        }.find {
+            obstacles.add(it)
+            val result = RouteProblemMap(Coords(70, 70), obstacles, 71, 71, 1, 0).findShortestPath(Coords(0, 0), Direction.DOWN, false)
+            if (result.shortestCost == -1) {
+                println("It happened at obstacle $it")
+            }
+            (result.shortestCost == -1)
+        }
 }
 
