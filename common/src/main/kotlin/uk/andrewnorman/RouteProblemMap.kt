@@ -17,6 +17,8 @@ class RouteProblemMap(val end: Coords, val obstacles: Set<Coords>, val lengthX: 
         return findNextStep(start, direction, 0, allRoutes)
     }
 
+    // TODO: Rewrite this properly with Dijkstra's (i.e. breadth first rather than depth first)
+
     fun findNextStep(location: Coords, direction: Direction, costSoFar: Int, allRoutes: Boolean): ShortestPathResult {
         if (obstacles.contains(location)) {
             return ShortestPathResult(-1, emptySet())
