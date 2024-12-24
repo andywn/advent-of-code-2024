@@ -114,9 +114,8 @@ class Warehouse {
     }
 
     fun countGPS(): Long {
-        return IntRange(0, warehouse.size-1).flatMap {
-            y -> IntRange(0, warehouse[y].size-1).map { x -> Coords(x, y) }
-        }.filter { warehouse[it.y][it.x] == BOX_LEFT }
+        return PlaneRange(warehouse[0].size, warehouse.size)
+            .filter { warehouse[it.y][it.x] == BOX_LEFT }
             .map{ (100L * it.y) + it.x }
             .sum()
     }

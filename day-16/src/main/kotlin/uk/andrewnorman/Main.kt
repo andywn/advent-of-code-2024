@@ -38,8 +38,7 @@ class Maze(val mazeMap: List<String>) {
             mazeMap.indexOfFirst{ it.contains("E") })
 
         // Fix this up later...
-        val obstacles = IntRange(0, mazeMap.size-1)
-            .flatMap { y -> IntRange(0, mazeMap[0].length-1).map { x -> Coords(x, y) } }
+        val obstacles = PlaneRange(mazeMap[0].length, mazeMap.size)
             .filter { mazeMap[it.y][it.x] == '#' }
             .toSet()
 
