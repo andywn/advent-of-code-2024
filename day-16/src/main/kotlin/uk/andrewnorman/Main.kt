@@ -24,7 +24,7 @@ fun main() {
 //            "###############")
 
     val result = Maze(lines).findShortestPath()
-    println("Cost: ${result.shortestCost}, All possible steps count: ${result.allShortestPathSteps.size}")
+    println("Cost: ${result.shortestCost}, All possible steps count: ${result.pathOrder.toSet().size}")
 }
 
 class Maze(val mazeMap: List<String>) {
