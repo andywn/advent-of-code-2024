@@ -1,6 +1,7 @@
 package uk.andrewnorman
 
 import java.util.Objects
+import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
 
@@ -49,6 +50,11 @@ class Coords(val x: Int, val y: Int) {
             else -> -10
         }
         return max(xquadrant+yquadrant, 0)
+    }
+
+    // Distance using only up, down, left, right moves.
+    fun distanceFrom(coord: Coords): Int {
+        return abs(coord.x - this.x) + abs(coord.y - this.y)
     }
 
     override fun equals(other: Any?): Boolean {
